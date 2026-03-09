@@ -1,0 +1,472 @@
+{
+  "name": "AI Brand Tweet Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU",
+          "mode": "list",
+          "cachedResultName": "Brand_Tweet_Inputs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1230167165,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit#gid=1230167165"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "62a3e283-bdda-4bbd-96fc-385c0afbdf32",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "tdOdsHLTZl2q6mhG",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec17967a-2a00-4d30-8143-7263c5ba7ff9",
+              "name": "brand_name",
+              "value": "={{$json[\"Brand Name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "b692aecb-bd40-4831-9f3a-3a19e90c6a80",
+              "name": "industry",
+              "value": "={{$json[\"Industry / Category\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "9a7085ef-ad69-4b49-9d24-2bdabcd790ad",
+              "name": "campaign_objective",
+              "value": "={{$json[\"Campaign Objective\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "6e092d21-32b8-4569-aabc-0478695dbcab",
+              "name": "product_description",
+              "value": "={{$json[\"Product Description\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "62a4ad06-bae8-4699-ac9c-5263bf6572f0",
+              "name": "target_audience",
+              "value": "={{ $json['Target Audience '] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7e429aa9-d697-430c-95e2-b6fa6445a2d5",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media brand strategist.\n\nAnalyze the following brand information.\n\nBrand Name: {{$json.brand_name}}\nIndustry: {{$json.industry}}\nCampaign Objective: {{$json.campaign_objective}}\nProduct Description: {{$json.product_description}}\nTarget Audience: {{$json.target_audience}}\n\nDetermine the brand voice and communication style.\n\nReturn the result strictly in JSON format:\n\n{\n \"tone\": \"\",\n \"target_audience\": \"\",\n \"content_themes\": \"\",\n \"communication_style\": \"\"\n}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        448,
+        0
+      ],
+      "id": "64a4d62e-929a-450e-8cbf-393d32fb7bca",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        520,
+        224
+      ],
+      "id": "d1e8cb18-2b80-4321-9957-f702dce8b9b8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "gSfXyEOKDBN8QCq1",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86986412-6d8c-4a04-8738-fea8ae7f8450",
+              "name": "tone",
+              "value": "={{ JSON.parse($json[\"text\"]).tone }}",
+              "type": "string"
+            },
+            {
+              "id": "3a11da00-b8bd-4c9c-b0fe-30570792c6e7",
+              "name": "target_audience",
+              "value": "={{ JSON.parse($json[\"text\"]).target_audience }}",
+              "type": "string"
+            },
+            {
+              "id": "997b8016-846a-4f1d-be3f-26115862ddf7",
+              "name": "content_themes",
+              "value": "={{ JSON.parse($json[\"text\"]).content_themes }}",
+              "type": "string"
+            },
+            {
+              "id": "a40de056-0a77-4f06-8f1d-7d48f36e8ce9",
+              "name": "communication_style",
+              "value": "={{ JSON.parse($json[\"text\"]).communication_style }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "a0417934-5e52-44b7-89c3-7c67c9ba9512",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media copywriter.\n\nBrand Voice Profile\nTone: {{$json.tone}}\nTarget Audience: {{$json.target_audience}}\nContent Themes: {{$json.content_themes}}\nCommunication Style: {{$json.communication_style}}\n\nGenerate 10 tweets for this brand.\n\nTweet distribution:\n3 engaging tweets\n3 promotional tweets\n2 witty/meme tweets\n2 informative tweets\n\nRules:\n• Each tweet must be under 280 characters\n• Maintain the brand tone and voice\n• Reflect the brand's content themes\n• Avoid repetition\n\nReturn JSON format:\n\n{\n \"tweets\":[\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\",\n  \"\"\n ]\n}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "0127f6ff-de8b-4d54-b5b1-6f33406d4cca",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1096,
+        224
+      ],
+      "id": "af2c9552-b215-426c-a57b-f6c2df3c2908",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "gSfXyEOKDBN8QCq1",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43b2dc29-b646-47eb-9db8-7bac8e10abf1",
+              "name": "tweets",
+              "value": "={{ JSON.parse($json[\"text\"]).tweets }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "62ea2ce6-a434-4571-9124-0b2e7890bb1d",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0bc2518f-0466-425a-8150-aaa99a96f4cb",
+              "name": "brand_voice_summary",
+              "value": "={{ \n`• Tone: ${$node[\"Edit Fields1\"].json[\"tone\"]}\n\n• Target Audience: ${$node[\"Edit Fields1\"].json[\"target_audience\"]}\n\n• Content Themes: ${$node[\"Edit Fields1\"].json[\"content_themes\"]}\n\n• Communication Style: ${$node[\"Edit Fields1\"].json[\"communication_style\"]}`\n}}",
+              "type": "string"
+            },
+            {
+              "id": "86045494-bfa9-4326-8036-05b1ef107298",
+              "name": "generated_tweets",
+              "value": "={{$json[\"tweets\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "2f8f3023-df07-4d5f-a2b8-059714750615",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU",
+          "mode": "list",
+          "cachedResultName": "Brand_Tweet_Inputs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 891407316,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit#gid=891407316"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "brand_name": "={{$node[\"Edit Fields\"].json[\"brand_name\"]}}",
+            "generated_tweets": "={{ JSON.parse($node[\"Edit Fields3\"].json[\"generated_tweets\"])\n.map((t,i)=>`Tweet ${i+1}: ${t}`)\n.join(\"\\n\\n\") }}",
+            "brand_voice_summary": "={{$node[\"Edit Fields3\"].json[\"brand_voice_summary\"]}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "brand_name",
+              "displayName": "brand_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "brand_voice_summary",
+              "displayName": "brand_voice_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "generated_tweets",
+              "displayName": "generated_tweets",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1824,
+        0
+      ],
+      "id": "16b45cb2-e408-44ea-924b-344741af5638",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SRyIK6NioLGQbhYA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## AI Brand Tweet Generator\n\n1. Collect brand inputs from Google Form (brand name, industry, campaign objective, product description).\n2. Trigger workflow when a new response is added to Google Sheets.\n3. Use AI to analyze brand voice (tone, audience, themes, communication style).\n4. Generate 10 tweets aligned with the identified brand voice.\n5. Format output into a short brand voice summary + numbered tweets.\n6. Store final results in Google Sheets for review.",
+        "height": 256,
+        "width": 528
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "d03dadd5-2a43-4ecb-9d2f-dfc4de9129a6",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "53848ad2-bc5d-4764-be37-88f0d167319e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0a5f2e3ef345888dbacb5473516d6ed1ebee1a737b066fa9fe8829938e599bb7"
+  },
+  "id": "kwTGwn59xrK4IXGB",
+  "tags": []
+}

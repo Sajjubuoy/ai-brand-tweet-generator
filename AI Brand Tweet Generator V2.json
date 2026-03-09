@@ -1,0 +1,329 @@
+{
+  "name": "AI Brand Tweet Generator V2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU",
+          "mode": "list",
+          "cachedResultName": "Brand_Tweet_Inputs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1230167165,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit#gid=1230167165"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8ee0674a-b875-43af-846f-1376295a4985",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "tdOdsHLTZl2q6mhG",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec17967a-2a00-4d30-8143-7263c5ba7ff9",
+              "name": "brand_name",
+              "value": "={{$json[\"Brand Name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "b692aecb-bd40-4831-9f3a-3a19e90c6a80",
+              "name": "industry",
+              "value": "={{$json[\"Industry / Category\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "9a7085ef-ad69-4b49-9d24-2bdabcd790ad",
+              "name": "campaign_objective",
+              "value": "={{$json[\"Campaign Objective\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "6e092d21-32b8-4569-aabc-0478695dbcab",
+              "name": "product_description",
+              "value": "={{$json[\"Product Description\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "62a4ad06-bae8-4699-ac9c-5263bf6572f0",
+              "name": "target_audience",
+              "value": "={{ $json['Target Audience '] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "04e2603f-8d62-4133-aced-f9603593723d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU",
+          "mode": "list",
+          "cachedResultName": "Brand_Tweet_Inputs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 891407316,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vcha-ktEOx1Bd0Kc2hMtfx1zrj0ith8IzOQdi63wZyU/edit#gid=891407316"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "brand_name": "={{$json[\"brand_name\"]}}",
+            "generated_tweets": "={{$json[\"generated_tweets\"]}}",
+            "brand_voice_summary": "={{$json[\"brand_voice_summary\"]}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "brand_name",
+              "displayName": "brand_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "brand_voice_summary",
+              "displayName": "brand_voice_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "generated_tweets",
+              "displayName": "generated_tweets",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "bfe1fb14-bb5e-486b-9580-12154452f695",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SRyIK6NioLGQbhYA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## AI Brand Tweet Generator\n\n1. Collect brand inputs from Google Form (brand name, industry, campaign objective, product description).\n2. Trigger workflow when a new response is added to Google Sheets.\n3. Use AI to analyze brand voice (tone, audience, themes, communication style).\n4. Generate 10 tweets aligned with the identified brand voice.\n5. Format output into a short brand voice summary + numbered tweets.\n6. Store final results in Google Sheets for review.",
+        "height": 256,
+        "width": 528
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "f603ff01-be27-45dc-b782-39ce0807c188",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media strategist.\n\nAnalyze the following brand information:\n\nBrand Name: {{$json[\"brand_name\"]}}\nIndustry: {{$json[\"industry\"]}}\nCampaign Objective: {{$json[\"campaign_objective\"]}}\nProduct Description: {{$json[\"product_description\"]}}\nTarget Audience: {{$json[\"target_audience\"]}}\n\nTask:\n\n1. Create a short brand voice summary in 3–4 bullet points.\n2. Generate 10 tweets aligned with the brand voice.\n\nReturn the output STRICTLY in this JSON format:\n\n{\n \"brand_voice_summary\": \"• bullet1\\n• bullet2\\n• bullet3\\n• bullet4\",\n \"generated_tweets\": [\n  \"Tweet 1\",\n  \"Tweet 2\",\n  \"Tweet 3\",\n  \"Tweet 4\",\n  \"Tweet 5\",\n  \"Tweet 6\",\n  \"Tweet 7\",\n  \"Tweet 8\",\n  \"Tweet 9\",\n  \"Tweet 10\"\n ]\n}\n\nDo not return explanations.\nReturn only JSON.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        448,
+        0
+      ],
+      "id": "6d50e6dd-3e2a-409f-8468-b5eb78b15687",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        520,
+        224
+      ],
+      "id": "5dc76ed3-b98e-4acd-b40e-feea3189d9ee",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "gSfXyEOKDBN8QCq1",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "98c78b14-cd57-47c8-bee2-4f4846520f54",
+              "name": "=brand_name",
+              "value": "={{$node[\"Edit Fields\"].json[\"brand_name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "7a4a6b13-ce43-49fb-ae33-f8008bbda2d9",
+              "name": "brand_voice_summary",
+              "value": "={{ JSON.parse($json[\"text\"]).brand_voice_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "cf2a836f-b578-4834-92d4-c7e256a9146e",
+              "name": "generated_tweets",
+              "value": "={{ JSON.parse($json[\"text\"]).generated_tweets.join(\"\\n\\n\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "57873ff7-f033-4da7-9295-c7f19da2ff59",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "08109e44-00d0-4465-8dbd-4988808c2127",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0a5f2e3ef345888dbacb5473516d6ed1ebee1a737b066fa9fe8829938e599bb7"
+  },
+  "id": "kwhugg53J6IGgef5",
+  "tags": []
+}
